@@ -36,3 +36,40 @@ function setTheme(mode){
 
 	localStorage.setItem('theme', mode)
 }
+
+$(document).ready(function(){
+    $("#contact-form").submit(function(e){
+		console.log(e)
+        e.preventDefault();
+        var form = $(this);
+        var action = form.attr("action");
+        var data = form.serializeArray();
+		console.log(data)
+
+        $.ajax({
+                    url: action,
+                    dataType: 'json',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(getFormData(data)),
+                    success: function(data){
+                        console.log("DATA POSTED SUCCESSFULLY"+data);
+                    },
+                    error: function( jqXhr, textStatus, errorThrown ){
+                        console.log( errorThrown );
+                    }
+        });
+});
+});
+
+//utility function
+function getFormData(data) {
+   var unindexed_array = data;
+   var indexed_array = {};
+
+   $.map(unindexed_array, function(n, i) {
+    indexed_array[n['name']] = n['value'];
+   });
+
+   return indexed_array;
+}
